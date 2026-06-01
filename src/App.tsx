@@ -1,7 +1,7 @@
-import { Calendar, Apple, Smartphone } from 'lucide-react';
+import { Calendar, Apple, Smartphone, ShieldCheck } from 'lucide-react';
 
 export default function App() {
-  // Tu API real de Supabase
+  // Tu API real de Supabase (¡Asegúrate de que sea la tuya!)
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario";
 
   // Enlaces mágicos para los calendarios
@@ -17,13 +17,20 @@ export default function App() {
           <Calendar className="w-8 h-8" />
         </div>
 
-        {/* Títulos */}
-        <div className="space-y-3">
+        {/* Textos Principales MEJORADOS */}
+        <div className="space-y-4">
+          
+          {/* Badge Informativo Sutil */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
+             <ShieldCheck className="w-3.5 h-3.5" />
+             104 Partidos Oficiales Confirmados
+          </div>
+
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
             Guía Mundialista 26
           </h1>
           <p className="text-zinc-400 text-sm max-w-sm mx-auto leading-relaxed">
-            Sincroniza todos los partidos en tu teléfono. Los horarios se adaptan automáticamente a tu hora local.
+            Sincroniza el calendario en tu teléfono. Los horarios se adaptan a tu hora local y los cruces eliminatorios se actualizarán automáticamente.
           </p>
         </div>
 
@@ -39,10 +46,6 @@ export default function App() {
             <Smartphone className="w-5 h-5 text-emerald-400" />
             <span>Añadir a Google Calendar</span>
           </a>
-
-          <p className="text-[11px] text-zinc-500 pt-2">
-            * Conexión dinámica: los cruces finales se actualizarán solos.
-          </p>
         </div>
 
         <footer className="text-zinc-600 text-xs tracking-wide">
