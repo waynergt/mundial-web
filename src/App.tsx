@@ -23,14 +23,14 @@ export default function App() {
           {/* Badge Informativo Sutil */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
              <ShieldCheck className="w-3.5 h-3.5" />
-             104 Partidos Oficiales Confirmados
+             104 Partidos Oficiales Sincronizados a tu Dispositivo
           </div>
 
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
-            Guía Mundialista 26
+            Guía Mundialista 2026
           </h1>
           <p className="text-zinc-400 text-sm max-w-sm mx-auto leading-relaxed">
-            Sincroniza el calendario en tu teléfono. Los horarios se adaptan a tu hora local y los cruces eliminatorios se actualizarán automáticamente.
+            Sincroniza el calendario en tu teléfono. Los horarios se adaptan a tu hora local y los cruces de las eliminatorias se actualizarán automáticamente.
           </p>
         </div>
 
