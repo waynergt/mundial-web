@@ -1,4 +1,5 @@
 import { Calendar, Apple, Smartphone, ShieldCheck } from 'lucide-react';
+import AdBanner from './components/AdBanner';
 
 export default function App() {
   // Tu API real de Supabase (¡Asegúrate de que sea la tuya!)
@@ -47,6 +48,9 @@ export default function App() {
             <span>Añadir a Google Calendar</span>
           </a>
         </div>
+
+        {/* Banner de Publicidad Automática */}
+        <AdBanner />
 
         <footer className="text-zinc-600 text-xs tracking-wide">
           Calendario No Oficial • Totalmente Gratuito
