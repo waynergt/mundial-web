@@ -52,7 +52,26 @@ export default function App() {
         {/* Banner de Publicidad Automática */}
         <AdBanner />
 
-        <footer className="text-zinc-600 text-xs tracking-wide">
+        {/* Contador de Visitas Globales */}
+        <div className="w-full flex flex-col items-center justify-center mt-2 mb-6">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3 font-semibold">
+            Visitas Globales
+          </span>
+          <a 
+            href="https://info.flagcounter.com/wyAF" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="block hover:scale-105 transition-transform duration-300"
+          >
+            <img 
+              src="https://s05.flagcounter.com/count2/wyAF/bg_09090B/txt_A1A1AA/border_27272A/columns_2/maxflags_6/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" 
+              alt="Flag Counter" 
+              className="rounded-xl border border-zinc-800/60 shadow-2xl opacity-90 hover:opacity-100"
+            />
+          </a>
+        </div>
+
+        <footer className="text-zinc-600 text-xs tracking-wide pb-8">
           Calendario No Oficial • Totalmente Gratuito
         </footer>
       </div>
