@@ -89,86 +89,24 @@ npm run preview  # Preview local del build
 ```
 frontend-mundial/
 ├── src/
-│   ├── components/       # Componentes React reutilizables
-│   ├── pages/           # Páginas principales
-│   ├── hooks/           # Custom hooks
-│   ├── utils/           # Funciones auxiliares
-│   ├── assets/          # Imágenes, logos y recursos estáticos
+│   ├── App.css          # Estilos del componente principal
 │   ├── App.tsx          # Componente raíz
-│   ├── main.tsx         # Punto de entrada
-│   └── index.css        # Estilos globales
+│   ├── assets/          # Imágenes y recursos estáticos
+│   ├── index.css        # Estilos globales
+│   └── main.tsx         # Punto de entrada
 ├── public/              # Archivos estáticos
+├── index.html           # HTML principal
 ├── vite.config.ts       # Configuración de Vite
-├── tsconfig.json        # Configuración de TypeScript
-├── tailwind.config.js   # Configuración de Tailwind CSS
-└── package.json         # Dependencias y scripts
+├── tsconfig.json        # Configuración base de TypeScript
+├── tsconfig.app.json    # Configuración de TypeScript para la app
+├── tsconfig.node.json   # Configuración de TypeScript para Node
+├── eslint.config.js     # Configuración de ESLint
+├── package.json         # Dependencias y scripts
+└── README.md            # Este archivo
 ```
 
 ---
 
-## 🔧 Scripts Disponibles
+## �‍💻 Autor
 
-| Comando | Descripción |
-|---------|------------|
-| `npm run dev` | Inicia servidor de desarrollo |
-| `npm run build` | Construye para producción |
-| `npm run preview` | Vista previa del build de producción |
-| `npm run lint` | Ejecuta ESLint |
-| `npm run type-check` | Valida tipos de TypeScript |
-
----
-
-## 🌐 API y Endpoints
-
-El endpoint principal `/calendar.ics` genera un feed dinámico compatible con cualquier cliente de calendario que soporte iCalendar. Los cambios en la base de datos se reflejan inmediatamente sin necesidad de redescargas.
-
-```
-GET /calendar.ics
-Content-Type: text/calendar
-```
-
----
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
----
-
-## 📝 Licencia
-
-Este proyecto está licenciado bajo la **MIT License** — Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-## 👨‍💻 Autor
-
-**Wayner Alberto López y López**  
-*Desarrollador Junior | Especialista en React, TypeScript, y Frontend Moderno*
-
-- 🔗 [GitHub](https://github.com/waynergt)
-- 💼 [LinkedIn](https://linkedin.com/in/waynerlopez)
-
----
-
-## 📞 Soporte
-
-¿Tienes dudas o sugerencias? 
-- Abre un [issue](https://github.com/waynergt/mundial-web/issues)
-- Envía un email a: waynerlopez@example.com
-
----
-
-<div align="center">
-
-**⭐ Si este proyecto te fue útil, considera dejarle una estrella en GitHub**
-
-Desarrollado con ❤️ para los amantes del fútbol mundial.
-
-</div>
+Desarrollado por **Wayner Alberto López y López**
