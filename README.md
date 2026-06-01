@@ -107,6 +107,6 @@ frontend-mundial/
 
 ---
 
-## �‍💻 Autor
+## 👨🏽‍💻💻 Autor
 
 Desarrollado por **Wayner Alberto López y López**
