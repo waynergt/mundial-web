@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# 🏆 Guía Mundialista 26 - Calendario Dinámico
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=3ECF8E)
 
-Currently, two official plugins are available:
+Una aplicación web minimalista que permite a los usuarios sincronizar los 104 partidos del Mundial 2026 directamente en sus dispositivos (Apple Calendar y Google Calendar) mediante un feed dinámico `.ics`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Características Principales
 
-## React Compiler
+* **Sincronización Dinámica (iCalendar):** Los usuarios no descargan un archivo estático; se suscriben a un feed. Esto permite actualizar los cruces de las fases eliminatorias en tiempo real sin que el usuario deba realizar ninguna acción extra.
+* **Conversión de Zona Horaria:** La base de datos maneja los tiempos en formato universal (UTC). Al generar el archivo `.ics`, los dispositivos de los usuarios interpretan y adaptan automáticamente el horario a su zona local.
+* **Datos Oficiales:** Integración de las 48 selecciones clasificadas y los 104 partidos oficiales programados por la FIFA.
+* **Interfaz Premium:** Landing page desarrollada con React y estilizada con Tailwind CSS para una experiencia de usuario rápida, elegante y orientada a la conversión.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Arquitectura y Tecnologías
 
-## Expanding the ESLint configuration
+El proyecto está dividido en dos capas principales:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Frontend (Cliente):**
+   * Construido con **Vite**, **React** y **TypeScript**.
+   * Estilos utilitarios manejados con **Tailwind CSS**.
+   * Iconografía vectorial ligera gracias a **Lucide React**.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. **Backend (API y Base de Datos):**
+   * **Supabase (PostgreSQL):** Base de datos relacional con tablas normalizadas para `teams` y `matches`.
+   * **Edge Functions (Deno):** Un endpoint *serverless* escrito en TypeScript que consulta la base de datos, formatea la información según el estándar RFC 5545 y devuelve un archivo `text/calendar` válido.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Instalación y Despliegue Local
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Si deseas clonar este proyecto y correrlo en tu entorno local, sigue estos pasos:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Prerrequisitos
+* Node.js (v18 o superior)
+* npm o yarn
+* Supabase CLI (para el backend)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Configuración del Frontend
+1. Clona el repositorio:
+```bash
+   git clone [https://github.com/waynergt/mundial-web.git](https://github.com/waynergt/mundial-web.git)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. Entra al directorio e instala las dependencias:
+```bash
+    cd mundial-web
+    npm install
+
+3. Ejecuta el servidor de desarrollo:
+```bash
+    npm run dev
+
+#👨‍💻 Autor
+Desarrollado por Wayner Alberto López y López - Desarrollador Junior con experiencia en la creación de proyectos utilizando APIs, frontend, React, TypeScript y Tailwind CSS.
