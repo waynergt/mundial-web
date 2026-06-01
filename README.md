@@ -52,5 +52,11 @@ Si deseas clonar este proyecto y correrlo en tu entorno local, sigue estos pasos
 
 
 
-👨‍💻 Autor
-Desarrollado por Wayner Alberto López y López - Desarrollador Junior con experiencia en la creación de proyectos utilizando APIs, frontend, React, TypeScript y Tailwind CSS.
+
+
+---
+
+## 👨‍💻 Autor
+
+Desarrollado por **Wayner Alberto López y López**  
+*Desarrollador Junior con experiencia en la creación de proyectos utilizando APIs, frontend, React, TypeScript y Tailwind CSS.*
