@@ -2,7 +2,7 @@ import { Calendar, Apple, Smartphone, ShieldCheck } from 'lucide-react';
 import AdBanner from './components/AdBanner';
 
 export default function App() {
-  // Tu API real de Supabase (¡Asegúrate de que sea la tuya!)
+  // Agregamos un parámetro ficticio (.ics) para engañar al validador de Google
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?feed.ics";
 
   // Enlaces mágicos para los calendarios
@@ -71,8 +71,20 @@ export default function App() {
           </a>
         </div>
 
-        <footer className="text-zinc-600 text-xs tracking-wide pb-8">
-          Calendario No Oficial • Totalmente Gratuito
+        {/* Footer con tu firma profesional */}
+        <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
+          <span>Calendario No Oficial • Totalmente Gratuito</span>
+          <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
+            <span>Desarrollado por</span>
+            <a 
+              href="https://github.com/waynergt" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-semibold text-emerald-500 hover:text-emerald-400 transition-colors"
+            >
+              Wayner López
+            </a>
+          </div>
         </footer>
       </div>
     </div>
