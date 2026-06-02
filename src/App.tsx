@@ -3,11 +3,11 @@ import AdBanner from './components/AdBanner';
 
 export default function App() {
   // Agregamos un parámetro ficticio (.ics) para engañar al validador de Google
-  const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?feed.ics";
+  const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
 
   // Enlaces mágicos para los calendarios
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
-  const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(SUPABASE_URL)}`;
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30">
