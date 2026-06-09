@@ -1,12 +1,18 @@
-import { Calendar, Apple, Smartphone, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown } from 'lucide-react';
 import AdBanner from './components/AdBanner';
 
 export default function App() {
-  // Agregamos un parámetro ficticio (.ics) para engañar al validador de Google
+  // Estado para controlar si mostramos la ayuda de Android o no
+  const [showAndroidHelp, setShowAndroidHelp] = useState(false);
+
+  // 1. URL con el parámetro mundial.ics para limpiar la caché de Google
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
 
-  // Enlaces mágicos para los calendarios
+  // 2. Enlace de Apple (convierte https a webcal)
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
+  
+  // 3. El truco maestro para Google Calendar
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   return (
@@ -18,7 +24,7 @@ export default function App() {
           <Calendar className="w-8 h-8" />
         </div>
 
-        {/* Textos Principales MEJORADOS */}
+        {/* Textos Principales */}
         <div className="space-y-4">
           
           {/* Badge Informativo Sutil */}
@@ -35,18 +41,46 @@ export default function App() {
           </p>
         </div>
 
-        {/* Botones de acción */}
-        <div className="bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md rounded-3xl p-6 space-y-4 shadow-2xl">
-          
-          <a href={appleCalendarUrl} className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-white text-black font-semibold rounded-2xl hover:bg-zinc-200 transition-all duration-200 shadow-lg active:scale-[0.98]">
-            <Apple className="w-5 h-5 fill-current" />
-            <span>Suscribirse en iPhone / Mac</span>
-          </a>
+        {/* CONTENEDOR CENTRAL: Botones y Ayuda */}
+        <div className="space-y-3">
+          {/* Botones de acción */}
+          <div className="bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md rounded-3xl p-6 space-y-4 shadow-2xl">
+            <a href={appleCalendarUrl} className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-white text-black font-semibold rounded-2xl hover:bg-zinc-200 transition-all duration-200 shadow-lg active:scale-[0.98]">
+              <Apple className="w-5 h-5 fill-current" />
+              <span>Suscribirse en iPhone / Mac</span>
+            </a>
 
-          <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-zinc-800 text-zinc-100 font-semibold rounded-2xl border border-zinc-700/50 hover:bg-zinc-700/50 hover:border-zinc-600 transition-all duration-200 active:scale-[0.98]">
-            <Smartphone className="w-5 h-5 text-emerald-400" />
-            <span>Añadir a Google Calendar</span>
-          </a>
+            <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-zinc-800 text-zinc-100 font-semibold rounded-2xl border border-zinc-700/50 hover:bg-zinc-700/50 hover:border-zinc-600 transition-all duration-200 active:scale-[0.98]">
+              <Smartphone className="w-5 h-5 text-emerald-400" />
+              <span>Añadir a Google Calendar</span>
+            </a>
+          </div>
+
+          {/* Sección de Ayuda Desplegable para Android */}
+          <div className="w-full text-left">
+            <button 
+              onClick={() => setShowAndroidHelp(!showAndroidHelp)}
+              className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <Info className="w-4 h-4 text-emerald-500" />
+                ¿No ves los partidos en Android?
+              </span>
+              <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAndroidHelp ? 'rotate-180' : ''}`} />
+            </button>
+            
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAndroidHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+              <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
+                <p>Por defecto, la app de Google pausa los calendarios nuevos para ahorrar datos. Sigue estos 3 pasos:</p>
+                <ol className="list-decimal list-inside space-y-1 ml-1 text-zinc-300 font-medium">
+                  <li>Abre tu app de <span className="text-white">Google Calendar</span>.</li>
+                  <li>Ve a <span className="text-white">Ajustes / Configuración</span>.</li>
+                  <li>Toca el calendario del Mundial y activa <span className="text-emerald-400">"Sincronizar"</span>.</li>
+                </ol>
+                <p className="mt-2 text-emerald-500/80 italic">¡Listo! Los partidos cargarán automáticamente en un par de minutos.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Banner de Publicidad Automática */}
@@ -54,7 +88,7 @@ export default function App() {
 
         {/* Contador de Visitas Globales */}
         <div className="w-full flex flex-col items-center justify-center mt-2 mb-6">
-          <span className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3 font-semibold">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-wildest mb-3 font-semibold">
             Visitas Globales
           </span>
           <a 
@@ -71,9 +105,14 @@ export default function App() {
           </a>
         </div>
 
-        {/* Footer con tu firma profesional */}
+        {/* Footer con tu firma profesional y versión */}
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
-          <span>Calendario No Oficial • Totalmente Gratuito</span>
+          <div className="flex items-center gap-2 justify-center">
+            <span>Calendario No Oficial • Totalmente Gratuito</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">
+              v1.1.0
+            </span>
+          </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
             <a 
