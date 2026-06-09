@@ -3,7 +3,6 @@ import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown } from 'luc
 import { Joyride, STATUS } from 'react-joyride';
 import AdBanner from './components/AdBanner';
 
-// EL TRUCO MAESTRO: Silenciamos todas las validaciones de propiedades para este componente
 const JoyrideTour = Joyride as any;
 
 export default function App() {
@@ -17,7 +16,8 @@ export default function App() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('hasSeenMundialTourV4');
+    // Variable V5 para que la página "olvide" que ya hiciste el tour y te lo muestre de nuevo
+    const hasSeenTour = localStorage.getItem('hasSeenMundialTourV5');
     if (!hasSeenTour) {
       const timer = setTimeout(() => setRunTour(true), 800);
       return () => clearTimeout(timer);
@@ -30,40 +30,45 @@ export default function App() {
     
     if (finishedStatuses.includes(status)) {
       setRunTour(false);
-      localStorage.setItem('hasSeenMundialTourV4', 'true');
+      localStorage.setItem('hasSeenMundialTourV5', 'true');
     }
   };
 
+  // En la V3, el disableBeacon se puede forzar en cada paso o globalmente.
+  // Lo ponemos en el paso 1 explícitamente para que arranque de golpe.
   const tourSteps: any[] = [
     {
       target: '#tour-header',
       content: '¡Bienvenido! Sincroniza los 104 partidos del Mundial directamente en la agenda de tu celular en tu hora local.',
-      disableBeacon: true,
+      disableBeacon: true, // Esto mata el puntito de inicio
     },
     {
       target: '#tour-apple',
       content: 'Si usas iPhone o Mac, toca este botón blanco para suscribirte.',
+      disableBeacon: true,
     },
     {
       target: '#tour-android',
       content: 'Si usas Android, toca aquí para añadirlo a tu cuenta de Google Calendar.',
+      disableBeacon: true,
     },
     {
       target: '#tour-help',
       content: '¡Importante! Despliega estas guías para asegurar que tu celular te envíe alertas 30 minutos antes de cada juego.',
+      disableBeacon: true,
     }
   ];
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30 relative">
       
-      {/* Usamos nuestro componente silenciado en lugar del original */}
       <JoyrideTour
         steps={tourSteps}
         run={runTour}
         continuous={true}
         showProgress={true}
         showSkipButton={true}
+        disableOverlayClose={true} // Evita que el usuario cierre el tour haciendo clic afuera por accidente
         callback={handleJoyrideCallback}
         locale={{
           back: 'Atrás',
@@ -178,7 +183,7 @@ export default function App() {
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.4</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.5</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
