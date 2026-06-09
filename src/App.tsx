@@ -1,18 +1,122 @@
-import { useState } from 'react';
-import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown, X } from 'lucide-react';
 import AdBanner from './components/AdBanner';
 
 export default function App() {
-  // Estados para controlar los desplegables de ayuda
+  // Estados para controlar la interfaz
   const [showAndroidHelp, setShowAndroidHelp] = useState(false);
   const [showAppleHelp, setShowAppleHelp] = useState(false);
+  
+  // Estados para el Tutorial (Tour)
+  const [showTour, setShowTour] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
 
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
+  // Verificar si es la primera visita cuando carga la página
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem('hasSeenMundialTour');
+    if (!hasSeenTour) {
+      // Retrasamos medio segundo la aparición para que sea más elegante
+      const timer = setTimeout(() => setShowTour(true), 500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  // Función para cerrar el tutorial y guardar que ya lo vio
+  const closeTour = () => {
+    setShowTour(false);
+    localStorage.setItem('hasSeenMundialTour', 'true');
+  };
+
+  // Datos de los pasos del tutorial
+  const tourSteps = [
+    {
+      title: "¡Bienvenido a tu Guía!",
+      description: "Sincroniza los 104 partidos del Mundial directamente en la agenda de tu celular, con alertas automáticas y en tu hora local.",
+      icon: <Calendar className="w-10 h-10 text-emerald-400" />
+    },
+    {
+      title: "1. Elige tu sistema",
+      description: "Toca el botón blanco si usas iPhone / Mac, o el botón oscuro si utilizas un celular Android.",
+      icon: <Smartphone className="w-10 h-10 text-blue-400" />
+    },
+    {
+      title: "2. Activa las alertas",
+      description: "¡Importante! Revisa las guías desplegables en la pantalla para asegurarte de que tu celular te avise 30 minutos antes de cada juego.",
+      icon: <Info className="w-10 h-10 text-yellow-400" />
+    },
+    {
+      title: "¡Todo listo!",
+      description: "Los cruces de octavos y la gran final se actualizarán solos. ¡Añade el calendario y prepárate para el Mundial!",
+      icon: <ShieldCheck className="w-10 h-10 text-emerald-500" />
+    }
+  ];
+
   return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30 relative">
+      
+      {/* --- OVERLAY DEL TUTORIAL --- */}
+      {showTour && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-zinc-900 border border-zinc-700/60 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative">
+            
+            {/* Botón de cerrar (X) */}
+            <button onClick={closeTour} className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300">
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Contenido del paso actual */}
+            <div className="flex flex-col items-center text-center space-y-4 mt-2">
+              <div className="p-4 bg-zinc-800/50 rounded-2xl border border-zinc-700/50 shadow-inner">
+                {tourSteps[tourStep].icon}
+              </div>
+              <h2 className="text-xl font-bold text-white">{tourSteps[tourStep].title}</h2>
+              <p className="text-sm text-zinc-400 leading-relaxed min-h-[60px]">
+                {tourSteps[tourStep].description}
+              </p>
+            </div>
+
+            {/* Indicadores de progreso (Puntitos) */}
+            <div className="flex justify-center gap-2 my-6">
+              {tourSteps.map((_, index) => (
+                <div 
+                  key={index} 
+                  className={`h-1.5 rounded-full transition-all duration-300 ${index === tourStep ? 'w-6 bg-emerald-500' : 'w-2 bg-zinc-700'}`}
+                />
+              ))}
+            </div>
+
+            {/* Botones de navegación del modal */}
+            <div className="flex gap-3">
+              {tourStep < tourSteps.length - 1 ? (
+                <>
+                  <button onClick={closeTour} className="w-full py-3 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
+                    Omitir
+                  </button>
+                  <button 
+                    onClick={() => setTourStep(prev => prev + 1)}
+                    className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/20"
+                  >
+                    Siguiente
+                  </button>
+                </>
+              ) : (
+                <button 
+                  onClick={closeTour}
+                  className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/20"
+                >
+                  ¡Comenzar!
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* --- FIN DEL TUTORIAL --- */}
+
       <div className="w-full max-w-md text-center space-y-8">
         
         {/* Icono animado */}
@@ -36,7 +140,6 @@ export default function App() {
 
         {/* CONTENEDOR CENTRAL: Botones y Ayuda */}
         <div className="space-y-3">
-          {/* Botones de acción */}
           <div className="bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md rounded-3xl p-6 space-y-4 shadow-2xl">
             <a href={appleCalendarUrl} className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-white text-black font-semibold rounded-2xl hover:bg-zinc-200 transition-all duration-200 shadow-lg active:scale-[0.98]">
               <Apple className="w-5 h-5 fill-current" />
@@ -49,10 +152,8 @@ export default function App() {
             </a>
           </div>
 
-          {/* Acordeones de Ayuda (Apple y Android) */}
+          {/* Acordeones de Ayuda */}
           <div className="space-y-2 w-full text-left mt-2">
-            
-            {/* Ayuda iPhone */}
             <div>
               <button 
                 onClick={() => setShowAppleHelp(!showAppleHelp)}
@@ -64,7 +165,6 @@ export default function App() {
                 </span>
                 <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAppleHelp ? 'rotate-180' : ''}`} />
               </button>
-              
               <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAppleHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
                 <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
                   <p>Por seguridad, iOS silencia las notificaciones de los calendarios nuevos. Para que tu celular te avise 30 min antes:</p>
@@ -78,7 +178,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Ayuda Android */}
             <div>
               <button 
                 onClick={() => setShowAndroidHelp(!showAndroidHelp)}
@@ -90,7 +189,6 @@ export default function App() {
                 </span>
                 <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAndroidHelp ? 'rotate-180' : ''}`} />
               </button>
-              
               <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAndroidHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
                 <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
                   <p>Por defecto, la app de Google pausa los calendarios nuevos para ahorrar datos. Sigue estos 3 pasos:</p>
@@ -103,7 +201,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -134,7 +231,7 @@ export default function App() {
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Totalmente Gratuito</span>
             <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">
-              v1.2.0
+              v1.3.0
             </span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
