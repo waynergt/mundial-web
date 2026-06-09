@@ -10,36 +10,30 @@ export default function App() {
   const [showAppleHelp, setShowAppleHelp] = useState(false);
   
   const [runTour, setRunTour] = useState(false);
-  // NUEVO: Tomamos el control manual del paso en el que estamos
-  const [stepIndex, setStepIndex] = useState(0);
 
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('tour_definitivo_v1');
+    const hasSeenTour = localStorage.getItem('tour_oficial_v1');
     if (!hasSeenTour) {
-      // 1. GUARDAMOS INMEDIATAMENTE: Si recargas a la mitad, ya no vuelve a salir.
-      localStorage.setItem('tour_definitivo_v1', 'true');
-      
+      // Retrasamos el inicio 1.5 segundos para garantizar que el HTML ya exista en el celular
+      // Esto evita que Joyride entre en pánico y saque el punto negro
       const timer = setTimeout(() => {
         setRunTour(true);
-      }, 800);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, []);
 
   const handleJoyrideCallback = (data: any) => {
-    const { action, index, status, type } = data;
+    const { status } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     
     if (finishedStatuses.includes(status)) {
-      // Si termina u omite, apagamos el tour
       setRunTour(false);
-    } else if (type === 'step:after' || type === 'error:target_not_found') {
-      // 2. CONTROLAMOS EL AVANCE: Saltamos el puntito negro y forzamos la apertura
-      setStepIndex(index + (action === 'prev' ? -1 : 1));
+      localStorage.setItem('tour_oficial_v1', 'true');
     }
   };
 
@@ -47,7 +41,7 @@ export default function App() {
     {
       target: '#tour-header',
       content: '¡Bienvenido! Sincroniza los 104 partidos del Mundial directamente en la agenda de tu celular en tu hora local.',
-      disableBeacon: true,
+      disableBeacon: true, // Orden directa de saltar el faro
     },
     {
       target: '#tour-apple',
@@ -72,7 +66,6 @@ export default function App() {
       <JoyrideTour
         steps={tourSteps}
         run={runTour}
-        stepIndex={stepIndex} // <-- Esto obliga a la librería a abrir el globo ignorando el beacon
         continuous={true}
         showProgress={true}
         showSkipButton={true}
@@ -93,6 +86,10 @@ export default function App() {
             primaryColor: '#10b981',
             textColor: '#e4e4e7',
             zIndex: 1000,
+          },
+          // FUERZA BRUTA: Si por algún motivo intenta mostrar el punto, el CSS lo vuelve invisible y avanza.
+          beacon: {
+            display: 'none' 
           }
         }}
       />
@@ -191,7 +188,7 @@ export default function App() {
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8 relative z-10">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.7</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.8</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
