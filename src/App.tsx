@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown } from 'lucide-react';
-
-// @ts-ignore - Silenciamos la advertencia estricta de módulo de Vite para esta librería
-import Joyride, { STATUS } from 'react-joyride';
-
+import { Joyride, STATUS } from 'react-joyride';
 import AdBanner from './components/AdBanner';
+
+// EL TRUCO MAESTRO: Silenciamos todas las validaciones de propiedades para este componente
+const JoyrideTour = Joyride as any;
 
 export default function App() {
   const [showAndroidHelp, setShowAndroidHelp] = useState(false);
@@ -17,25 +17,23 @@ export default function App() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('hasSeenMundialTourV2');
+    const hasSeenTour = localStorage.getItem('hasSeenMundialTourV4');
     if (!hasSeenTour) {
       const timer = setTimeout(() => setRunTour(true), 800);
       return () => clearTimeout(timer);
     }
   }, []);
 
-  // CORRECCIÓN: Usamos 'any' en lugar de 'CallBackProps' para evitar el error estricto
   const handleJoyrideCallback = (data: any) => {
     const { status } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     
     if (finishedStatuses.includes(status)) {
       setRunTour(false);
-      localStorage.setItem('hasSeenMundialTourV2', 'true');
+      localStorage.setItem('hasSeenMundialTourV4', 'true');
     }
   };
 
-  // CORRECCIÓN: Usamos 'any[]' para evitar que TypeScript evalúe propiedades como disableBeacon
   const tourSteps: any[] = [
     {
       target: '#tour-header',
@@ -59,7 +57,8 @@ export default function App() {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30 relative">
       
-      <Joyride
+      {/* Usamos nuestro componente silenciado en lugar del original */}
+      <JoyrideTour
         steps={tourSteps}
         run={runTour}
         continuous={true}
@@ -81,25 +80,6 @@ export default function App() {
             primaryColor: '#10b981',
             textColor: '#e4e4e7',
             zIndex: 1000,
-          },
-          tooltipContainer: {
-            textAlign: 'left',
-            fontSize: '14px',
-            padding: '10px 5px'
-          },
-          buttonNext: {
-            backgroundColor: '#10b981',
-            color: '#000',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            padding: '8px 16px'
-          },
-          buttonBack: {
-            color: '#a1a1aa',
-            marginRight: '10px'
-          },
-          buttonSkip: {
-            color: '#a1a1aa',
           }
         }}
       />
@@ -198,7 +178,7 @@ export default function App() {
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.1</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.4</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
