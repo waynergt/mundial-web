@@ -3,16 +3,12 @@ import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown } from 'luc
 import AdBanner from './components/AdBanner';
 
 export default function App() {
-  // Estado para controlar si mostramos la ayuda de Android o no
+  // Estados para controlar los desplegables de ayuda
   const [showAndroidHelp, setShowAndroidHelp] = useState(false);
+  const [showAppleHelp, setShowAppleHelp] = useState(false);
 
-  // 1. URL con el parámetro mundial.ics para limpiar la caché de Google
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
-
-  // 2. Enlace de Apple (convierte https a webcal)
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
-  
-  // 3. El truco maestro para Google Calendar
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   return (
@@ -26,13 +22,10 @@ export default function App() {
 
         {/* Textos Principales */}
         <div className="space-y-4">
-          
-          {/* Badge Informativo Sutil */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
              <ShieldCheck className="w-3.5 h-3.5" />
              104 Partidos Oficiales Sincronizados a tu Dispositivo
           </div>
-
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
             Guía Mundialista 2026
           </h1>
@@ -56,30 +49,61 @@ export default function App() {
             </a>
           </div>
 
-          {/* Sección de Ayuda Desplegable para Android */}
-          <div className="w-full text-left">
-            <button 
-              onClick={() => setShowAndroidHelp(!showAndroidHelp)}
-              className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors"
-            >
-              <span className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-emerald-500" />
-                ¿No ves los partidos en Android?
-              </span>
-              <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAndroidHelp ? 'rotate-180' : ''}`} />
-            </button>
+          {/* Acordeones de Ayuda (Apple y Android) */}
+          <div className="space-y-2 w-full text-left mt-2">
             
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAndroidHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-              <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
-                <p>Por defecto, la app de Google pausa los calendarios nuevos para ahorrar datos. Sigue estos 3 pasos:</p>
-                <ol className="list-decimal list-inside space-y-1 ml-1 text-zinc-300 font-medium">
-                  <li>Abre tu app de <span className="text-white">Google Calendar</span>.</li>
-                  <li>Ve a <span className="text-white">Ajustes / Configuración</span>.</li>
-                  <li>Toca el calendario del Mundial y activa <span className="text-emerald-400">"Sincronizar"</span>.</li>
-                </ol>
-                <p className="mt-2 text-emerald-500/80 italic">¡Listo! Los partidos cargarán automáticamente en un par de minutos.</p>
+            {/* Ayuda iPhone */}
+            <div>
+              <button 
+                onClick={() => setShowAppleHelp(!showAppleHelp)}
+                className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Info className="w-4 h-4 text-blue-500" />
+                  ¿Cómo activar las alertas en iPhone?
+                </span>
+                <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAppleHelp ? 'rotate-180' : ''}`} />
+              </button>
+              
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAppleHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
+                  <p>Por seguridad, iOS silencia las notificaciones de los calendarios nuevos. Para que tu celular te avise 30 min antes:</p>
+                  <ol className="list-decimal list-inside space-y-1 ml-1 text-zinc-300 font-medium">
+                    <li>Al suscribirte, toca en <span className="text-white">Detalles de la suscripción</span>.</li>
+                    <li>Apaga la opción <span className="text-blue-400">"Eliminar alertas"</span> (que quede gris).</li>
+                    <li>Toca el cheque rojo de arriba para guardar.</li>
+                  </ol>
+                  <p className="mt-2 text-blue-500/80 italic">Si ya te suscribiste, puedes apagarlo en Ajustes {'>'} Calendario {'>'} Cuentas {'>'} Calendarios suscritos.</p>
+                </div>
               </div>
             </div>
+
+            {/* Ayuda Android */}
+            <div>
+              <button 
+                onClick={() => setShowAndroidHelp(!showAndroidHelp)}
+                className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Info className="w-4 h-4 text-emerald-500" />
+                  ¿No ves los partidos en Android?
+                </span>
+                <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${showAndroidHelp ? 'rotate-180' : ''}`} />
+              </button>
+              
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAndroidHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-2 shadow-inner">
+                  <p>Por defecto, la app de Google pausa los calendarios nuevos para ahorrar datos. Sigue estos 3 pasos:</p>
+                  <ol className="list-decimal list-inside space-y-1 ml-1 text-zinc-300 font-medium">
+                    <li>Abre tu app de <span className="text-white">Google Calendar</span>.</li>
+                    <li>Ve a <span className="text-white">Ajustes / Configuración</span>.</li>
+                    <li>Toca el calendario del Mundial y activa <span className="text-emerald-400">"Sincronizar"</span>.</li>
+                  </ol>
+                  <p className="mt-2 text-emerald-500/80 italic">¡Listo! Los partidos cargarán automáticamente en un par de minutos.</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -88,7 +112,7 @@ export default function App() {
 
         {/* Contador de Visitas Globales */}
         <div className="w-full flex flex-col items-center justify-center mt-2 mb-6">
-          <span className="text-[10px] text-zinc-600 uppercase tracking-wildest mb-3 font-semibold">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3 font-semibold">
             Visitas Globales
           </span>
           <a 
@@ -105,12 +129,12 @@ export default function App() {
           </a>
         </div>
 
-        {/* Footer con tu firma profesional y versión */}
+        {/* Footer */}
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Totalmente Gratuito</span>
             <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">
-              v1.1.0
+              v1.2.0
             </span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
