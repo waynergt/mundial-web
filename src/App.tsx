@@ -16,10 +16,11 @@ export default function App() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   useEffect(() => {
-    // Variable V5 para que la página "olvide" que ya hiciste el tour y te lo muestre de nuevo
-    const hasSeenTour = localStorage.getItem('hasSeenMundialTourV5');
+    // ESTA ES LA VARIABLE DEFINITIVA. Una vez que el usuario la guarde, no verá el tour nunca más.
+    const hasSeenTour = localStorage.getItem('hasSeenMundialTourFinal');
     if (!hasSeenTour) {
-      const timer = setTimeout(() => setRunTour(true), 800);
+      // Le damos 1 segundo exacto de respiro a la página antes de lanzar el tour de golpe
+      const timer = setTimeout(() => setRunTour(true), 1000);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -30,17 +31,15 @@ export default function App() {
     
     if (finishedStatuses.includes(status)) {
       setRunTour(false);
-      localStorage.setItem('hasSeenMundialTourV5', 'true');
+      localStorage.setItem('hasSeenMundialTourFinal', 'true');
     }
   };
 
-  // En la V3, el disableBeacon se puede forzar en cada paso o globalmente.
-  // Lo ponemos en el paso 1 explícitamente para que arranque de golpe.
   const tourSteps: any[] = [
     {
       target: '#tour-header',
       content: '¡Bienvenido! Sincroniza los 104 partidos del Mundial directamente en la agenda de tu celular en tu hora local.',
-      disableBeacon: true, // Esto mata el puntito de inicio
+      disableBeacon: true,
     },
     {
       target: '#tour-apple',
@@ -62,13 +61,15 @@ export default function App() {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30 relative">
       
+      {/* Añadimos disableBeacon={true} directamente a las raíces del componente para forzar su eliminación */}
       <JoyrideTour
         steps={tourSteps}
         run={runTour}
         continuous={true}
         showProgress={true}
         showSkipButton={true}
-        disableOverlayClose={true} // Evita que el usuario cierre el tour haciendo clic afuera por accidente
+        disableOverlayClose={true}
+        disableBeacon={true} 
         callback={handleJoyrideCallback}
         locale={{
           back: 'Atrás',
@@ -91,7 +92,7 @@ export default function App() {
 
       <div className="w-full max-w-md text-center space-y-8">
         
-        <div id="tour-header" className="space-y-4 p-2 rounded-2xl">
+        <div id="tour-header" className="space-y-4 p-2 rounded-2xl relative z-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 text-emerald-400 shadow-xl shadow-emerald-500/10 animate-pulse mb-4">
             <Calendar className="w-8 h-8" />
           </div>
@@ -108,7 +109,7 @@ export default function App() {
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 relative z-10">
           <div className="bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md rounded-3xl p-6 space-y-4 shadow-2xl">
             <a id="tour-apple" href={appleCalendarUrl} className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-white text-black font-semibold rounded-2xl hover:bg-zinc-200 transition-all duration-200 shadow-lg active:scale-[0.98]">
               <Apple className="w-5 h-5 fill-current" />
@@ -171,7 +172,7 @@ export default function App() {
         </div>
 
         <AdBanner />
-        <div className="w-full flex flex-col items-center justify-center mt-2 mb-6">
+        <div className="w-full flex flex-col items-center justify-center mt-2 mb-6 relative z-10">
           <span className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3 font-semibold">
             Visitas Globales
           </span>
@@ -180,10 +181,10 @@ export default function App() {
           </a>
         </div>
 
-        <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8">
+        <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8 relative z-10">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.5</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.6</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
