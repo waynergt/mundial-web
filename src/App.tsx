@@ -64,7 +64,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] pb-24 flex flex-col items-center justify-start p-6 bg-[#09090b] text-white selection:bg-emerald-500/30 relative">
+    <div className="min-h-[100dvh] pb-32 flex flex-col items-center justify-start p-6 bg-[#09090b] text-white selection:bg-emerald-500/30 relative">
       
       <JoyrideTour
         steps={[
@@ -87,7 +87,6 @@ export default function App() {
                 <Calendar className="w-8 h-8" />
               </div>
               
-              {/* RESTAURAMOS EL BADGE DE SHIELDCHECK */}
               <div className="flex justify-center">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
                    <ShieldCheck className="w-3.5 h-3.5" />
@@ -115,7 +114,6 @@ export default function App() {
             </div>
 
             <div id="tour-help" className="space-y-2 text-left">
-              {/* AYUDA APPLE */}
               <div>
                 <button onClick={() => setShowAppleHelp(!showAppleHelp)} className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors">
                   <span className="flex items-center gap-2"><Info className="w-4 h-4 text-blue-500" />¿Cómo activar las alertas en iPhone?</span>
@@ -128,7 +126,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* RESTAURAMOS AYUDA ANDROID */}
               <div>
                 <button onClick={() => setShowAndroidHelp(!showAndroidHelp)} className="flex items-center justify-between w-full px-4 py-3 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl text-sm text-zinc-300 hover:bg-zinc-800/50 transition-colors">
                   <span className="flex items-center gap-2"><Info className="w-4 h-4 text-emerald-500" />¿No ves los partidos en Android?</span>
@@ -203,6 +200,30 @@ export default function App() {
         )}
 
         <AdBanner />
+
+        {/* --- CONTADOR DE VISITAS --- */}
+        <div className="w-full flex flex-col items-center justify-center mt-8 mb-4 relative z-10">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3 font-semibold">
+            Visitas Globales
+          </span>
+          <a href="https://info.flagcounter.com/wyAF" target="_blank" rel="noopener noreferrer">
+            <img src="https://s05.flagcounter.com/count2/wyAF/bg_09090B/txt_A1A1AA/border_27272A/columns_2/maxflags_6/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" className="rounded-xl border border-zinc-800/60 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" />
+          </a>
+        </div>
+
+        {/* --- FOOTER / FIRMA --- */}
+        <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-4 relative z-10">
+          <div className="flex items-center gap-2 justify-center">
+            <span>Calendario No Oficial • Gratuito</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.5.0</span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
+            <span>Desarrollado por</span>
+            <a href="https://github.com/waynergt" target="_blank" rel="noopener noreferrer" className="font-semibold text-emerald-500 hover:text-emerald-400 transition-colors">
+              Wayner López
+            </a>
+          </div>
+        </footer>
 
         {/* --- BARRA DE NAVEGACIÓN INFERIOR --- */}
         <div id="tour-tabs" className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-zinc-900/90 border border-zinc-800/80 backdrop-blur-lg rounded-2xl p-2 flex justify-around items-center shadow-2xl z-40">
