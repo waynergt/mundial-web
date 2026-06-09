@@ -16,7 +16,7 @@ export default function App() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30">
       <div className="w-full max-w-md text-center space-y-8">
         
         {/* Icono animado */}
