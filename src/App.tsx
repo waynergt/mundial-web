@@ -10,28 +10,36 @@ export default function App() {
   const [showAppleHelp, setShowAppleHelp] = useState(false);
   
   const [runTour, setRunTour] = useState(false);
+  // NUEVO: Tomamos el control manual del paso en el que estamos
+  const [stepIndex, setStepIndex] = useState(0);
 
   const SUPABASE_URL = "https://slwnehwhzfywmhldgzgb.supabase.co/functions/v1/generar-calendario?mundial.ics";
   const appleCalendarUrl = SUPABASE_URL.replace(/^https?:/, 'webcal:');
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(appleCalendarUrl)}`;
 
   useEffect(() => {
-    // ESTA ES LA VARIABLE DEFINITIVA. Una vez que el usuario la guarde, no verá el tour nunca más.
-    const hasSeenTour = localStorage.getItem('hasSeenMundialTourFinal');
+    const hasSeenTour = localStorage.getItem('tour_definitivo_v1');
     if (!hasSeenTour) {
-      // Le damos 1 segundo exacto de respiro a la página antes de lanzar el tour de golpe
-      const timer = setTimeout(() => setRunTour(true), 1000);
+      // 1. GUARDAMOS INMEDIATAMENTE: Si recargas a la mitad, ya no vuelve a salir.
+      localStorage.setItem('tour_definitivo_v1', 'true');
+      
+      const timer = setTimeout(() => {
+        setRunTour(true);
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, []);
 
   const handleJoyrideCallback = (data: any) => {
-    const { status } = data;
+    const { action, index, status, type } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     
     if (finishedStatuses.includes(status)) {
+      // Si termina u omite, apagamos el tour
       setRunTour(false);
-      localStorage.setItem('hasSeenMundialTourFinal', 'true');
+    } else if (type === 'step:after' || type === 'error:target_not_found') {
+      // 2. CONTROLAMOS EL AVANCE: Saltamos el puntito negro y forzamos la apertura
+      setStepIndex(index + (action === 'prev' ? -1 : 1));
     }
   };
 
@@ -61,15 +69,14 @@ export default function App() {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-[#09090b] selection:bg-emerald-500/30 relative">
       
-      {/* Añadimos disableBeacon={true} directamente a las raíces del componente para forzar su eliminación */}
       <JoyrideTour
         steps={tourSteps}
         run={runTour}
+        stepIndex={stepIndex} // <-- Esto obliga a la librería a abrir el globo ignorando el beacon
         continuous={true}
         showProgress={true}
         showSkipButton={true}
         disableOverlayClose={true}
-        disableBeacon={true} 
         callback={handleJoyrideCallback}
         locale={{
           back: 'Atrás',
@@ -184,7 +191,7 @@ export default function App() {
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-8 relative z-10">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.6</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.4.7</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
