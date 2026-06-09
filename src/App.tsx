@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown, Radio, Newspaper } from 'lucide-react';
+import { Calendar, Apple, Smartphone, ShieldCheck, Info, ChevronDown, Radio, Newspaper, Trophy, Clock, CheckCircle2 } from 'lucide-react';
 import { Joyride, STATUS } from 'react-joyride';
 import AdBanner from './components/AdBanner';
 
@@ -7,10 +7,69 @@ const JoyrideTour = Joyride as any;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'live' | 'news'>('home');
+  // Sub-pestaña interna para la sección En Vivo: 'matches' (Historial/Próximos) o 'standings' (Tablas)
+  const [liveSubTab, setLiveSubTab] = useState<'matches' | 'standings'>('matches');
   
   const [showAndroidHelp, setShowAndroidHelp] = useState(false);
   const [showAppleHelp, setShowAppleHelp] = useState(false);
   const [runTour, setRunTour] = useState(false);
+
+  // MOCK DATA: Lista ampliada de partidos para diseñar el Historial, En Vivo y Próximos
+  const [tournamentMatches] = useState([
+    {
+      id: 101,
+      home: "México",
+      away: "Sudáfrica",
+      home_score: 2,
+      away_score: 1,
+      time: "13:00",
+      status: "FINISHED", // Historial / Resultado
+      stage: "Grupo A - Jornada 1"
+    },
+    {
+      id: 102,
+      home: "Estados Unidos",
+      away: "Jamaica",
+      home_score: 1,
+      away_score: 1,
+      time: "Min 72'",
+      status: "LIVE", // En Vivo actual
+      stage: "Grupo B - Jornada 1"
+    },
+    {
+      id: 103,
+      home: "Canadá",
+      away: "Omán",
+      home_score: 0,
+      away_score: 0,
+      time: "17:00",
+      status: "SCHEDULED", // Próximo partido hoy
+      stage: "Based en Hoy - 17:00"
+    },
+    {
+      id: 104,
+      home: "Argentina",
+      away: "Francia",
+      home_score: 0,
+      away_score: 0,
+      time: "Mañana",
+      status: "SCHEDULED", // Próximos días
+      stage: "Grupo C - Mañana 19:00"
+    }
+  ]);
+
+  // MOCK DATA: Estructura para la tabla de posiciones de grupos (Mundial 2026 usa 12 grupos de 4)
+  const [groupStandings] = useState([
+    {
+      groupName: "Grupo A",
+      teams: [
+        { rank: 1, name: "México", pj: 1, g: 1, e: 0, p: 0, gf: 2, gc: 1, pts: 3 },
+        { rank: 2, name: "Italia", pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 },
+        { rank: 3, name: "Camerún", pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, pts: 0 },
+        { rank: 4, name: "Sudáfrica", pj: 1, g: 0, e: 0, p: 1, gf: 1, gc: 2, pts: 0 },
+      ]
+    }
+  ]);
 
   const [newsList] = useState([
     {
@@ -20,27 +79,6 @@ export default function App() {
       category: "Nacional",
       time: "Hace 10 min",
       image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&q=80"
-    },
-    {
-      id: 2,
-      title: "Estadio Azteca reporta lleno total para la inauguración",
-      summary: "Los organizadores confirman que no queda un solo boleto disponible para la gran fiesta inaugural del 11 de junio.",
-      category: "Deportes",
-      time: "Hace 1 hora",
-      image: "https://images.unsplash.com/photo-1540747737956-378724044282?w=500&q=80"
-    }
-  ]);
-
-  const [liveMatches] = useState([
-    {
-      id: 101,
-      home: "México",
-      away: "Sudáfrica",
-      home_score: 1,
-      away_score: 0,
-      minute: 34,
-      status: "LIVE",
-      stage: "Grupo A"
     }
   ]);
 
@@ -86,14 +124,12 @@ export default function App() {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 text-emerald-400 shadow-xl shadow-emerald-500/10 mb-2">
                 <Calendar className="w-8 h-8" />
               </div>
-              
               <div className="flex justify-center">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium tracking-wide">
                    <ShieldCheck className="w-3.5 h-3.5" />
                    104 Partidos Oficiales
                 </div>
               </div>
-
               <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
                 Guía Mundialista 2026
               </h1>
@@ -133,7 +169,7 @@ export default function App() {
                 </button>
                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showAndroidHelp ? 'max-h-60 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
                   <div className="p-4 bg-zinc-900/30 border border-zinc-800/40 rounded-2xl text-xs text-zinc-400 leading-relaxed space-y-1 shadow-inner">
-                    <p>Por defecto, la app de Google pausa los calendarios nuevos. Ve a tu app de Google Calendar {'>'} Configuración {'>'} Toca el calendario y activa <span className="text-emerald-400">"Sincronizar"</span>.</p>
+                    <p>Por defecto, la app de Google causa que los calendarios nuevos no se sincronicen de golpe. Ve a tu app de Google Calendar {'>'} Configuración {'>'} Toca el calendario y activa <span className="text-emerald-400">"Sincronizar"</span>.</p>
                   </div>
                 </div>
               </div>
@@ -141,37 +177,113 @@ export default function App() {
           </div>
         )}
 
-        {/* --- VISTA PARTIDOS EN VIVO --- */}
+        {/* --- VISTA PARTIDOS EN VIVO / ESTADÍSTICAS --- */}
         {activeTab === 'live' && (
-          <div className="space-y-4 text-left animate-fade-in">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
-              <h2 className="text-xl font-bold tracking-tight">Marcadores en Vivo</h2>
-            </div>
+          <div className="space-y-5 text-left animate-fade-in">
             
-            {liveMatches.map(match => (
-              <div key={match.id} className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                <div className="flex justify-between items-center text-xs text-zinc-500">
-                  <span>{match.stage}</span>
-                  <span className="bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-semibold animate-pulse">
-                    En Vivo • Min {match.minute}'
-                  </span>
-                </div>
-                <div className="flex justify-between items-center px-4">
-                  <div className="flex flex-col items-center gap-2 w-1/3">
-                    <span className="font-bold text-center text-zinc-100">{match.home}</span>
+            {/* Selector de Sub-Pestañas Superiores */}
+            <div className="bg-zinc-900/80 p-1 rounded-xl border border-zinc-800 flex gap-1">
+              <button 
+                onClick={() => setLiveSubTab('matches')} 
+                className={`w-1/2 py-2.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-2 ${liveSubTab === 'matches' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-500 hover:text-zinc-400'}`}
+              >
+                <Radio className={`w-3.5 h-3.5 ${liveSubTab === 'matches' ? 'text-red-400' : ''}`} />
+                Partidos y Resultados
+              </button>
+              <button 
+                onClick={() => setLiveSubTab('standings')} 
+                className={`w-1/2 py-2.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-2 ${liveSubTab === 'standings' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-500 hover:text-zinc-400'}`}
+              >
+                <Trophy className={`w-3.5 h-3.5 ${liveSubTab === 'standings' ? 'text-yellow-400' : ''}`} />
+                Tabla de Posiciones
+              </button>
+            </div>
+
+            {/* SUB-SECCIÓN A: PARTIDOS (Historial, En vivo y Próximos) */}
+            {liveSubTab === 'matches' && (
+              <div className="space-y-4">
+                {tournamentMatches.map(match => (
+                  <div key={match.id} className="bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md rounded-2xl p-4 space-y-3 shadow-xl">
+                    <div className="flex justify-between items-center text-[11px] text-zinc-500 font-medium">
+                      <span>{match.stage}</span>
+                      
+                      {/* Renderizado condicional de insignias según el estado del juego */}
+                      {match.status === 'LIVE' && (
+                        <span className="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold animate-pulse">
+                          <Radio className="w-3 h-3" /> En Vivo • {match.time}
+                        </span>
+                      )}
+                      {match.status === 'FINISHED' && (
+                        <span className="inline-flex items-center gap-1 bg-zinc-800 border border-zinc-700 text-zinc-400 px-2 py-0.5 rounded-full">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-500" /> Finalizado
+                        </span>
+                      )}
+                      {match.status === 'SCHEDULED' && (
+                        <span className="inline-flex items-center gap-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+                          <Clock className="w-3 h-3" /> {match.time}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-center px-2">
+                      <div className="w-5/12 text-left font-bold text-sm tracking-wide text-zinc-200">{match.home}</div>
+                      
+                      {/* Marcador dinámico según el estado */}
+                      <div className="w-2/12 flex items-center justify-center gap-2 text-xl font-black font-mono">
+                        {match.status === 'SCHEDULED' ? (
+                          <span className="text-zinc-600 text-sm font-normal">VS</span>
+                        ) : (
+                          <>
+                            <span className={match.status === 'LIVE' ? 'text-red-400' : 'text-white'}>{match.home_score}</span>
+                            <span className="text-zinc-700 text-sm">-</span>
+                            <span className={match.status === 'LIVE' ? 'text-red-400' : 'text-white'}>{match.away_score}</span>
+                          </>
+                        )}
+                      </div>
+                      
+                      <div className="w-5/12 text-right font-bold text-sm tracking-wide text-zinc-200">{match.away}</div>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-center gap-4 w-1/3 text-3xl font-extrabold font-mono tracking-wider">
-                    <span>{match.home_score}</span>
-                    <span className="text-zinc-600 text-xl">-</span>
-                    <span>{match.away_score}</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-2 w-1/3">
-                    <span className="font-bold text-center text-zinc-100">{match.away}</span>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* SUB-SECCIÓN B: TABLA DE POSICIONES */}
+            {liveSubTab === 'standings' && (
+              <div className="space-y-6">
+                {groupStandings.map((group, gIdx) => (
+                  <div key={gIdx} className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 shadow-xl space-y-3">
+                    <h3 className="text-sm font-bold text-emerald-400 border-b border-zinc-800 pb-2">{group.groupName}</h3>
+                    
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs text-left text-zinc-400">
+                        <thead className="text-[10px] uppercase text-zinc-600 font-bold border-b border-zinc-800/50">
+                          <tr>
+                            <th className="py-2 w-8 text-center">Pos</th>
+                            <th className="py-2">Equipo</th>
+                            <th className="py-2 text-center w-8">PJ</th>
+                            <th className="py-2 text-center w-8">GD</th>
+                            <th className="py-2 text-center w-8 text-white font-bold">Pts</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-800/30">
+                          {group.teams.map((team, tIdx) => (
+                            <tr key={tIdx} className="hover:bg-zinc-800/20 transition-colors">
+                              <td className="py-2.5 text-center font-mono text-zinc-500 font-bold">{team.rank}</td>
+                              <td className="py-2.5 font-semibold text-zinc-200">{team.name}</td>
+                              <td className="py-2.5 text-center font-mono">{team.pj}</td>
+                              <td className="py-2.5 text-center font-mono text-zinc-500">{team.gf - team.gc}</td>
+                              <td className="py-2.5 text-center font-mono text-white font-bold bg-zinc-800/30 rounded-md">{team.pts}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
           </div>
         )}
 
@@ -215,7 +327,7 @@ export default function App() {
         <footer className="flex flex-col items-center justify-center gap-3 text-zinc-600 text-xs tracking-wide pb-4 relative z-10">
           <div className="flex items-center gap-2 justify-center">
             <span>Calendario No Oficial • Gratuito</span>
-            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.5.0</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-md font-mono">v1.6.0</span>
           </div>
           <div className="flex items-center gap-1.5 bg-zinc-900/50 px-4 py-1.5 rounded-full border border-zinc-800/50 shadow-sm">
             <span>Desarrollado por</span>
