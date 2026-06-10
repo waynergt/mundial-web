@@ -2,9 +2,8 @@
 import * as cheerio from 'cheerio';
 import { createClient } from '@supabase/supabase-js';
 
-// Conexión a tu base de datos
 const supabaseUrl = 'https://slwnehwhzfywmhldgzgb.supabase.co';
-const supabaseKey = 'sb_publishable_x_KqYiZhTtaRoJIUlu8CMg_aJK4UNWb'; // ¡Recuerda poner tu llave real!
+const supabaseKey = 'sb_publishable_x_KqYiZhTtaRoJIUlu8CMg_aJK4UNWb'; // ¡Pon tu llave real!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
@@ -13,8 +12,8 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    // 1. Visitamos la versión de Guatemala de ESPN para los resultados
-    const targetUrl = 'https://www.espn.com.gt/futbol/partido/_/juegoId/401867950/islandia-argentina'; 
+    // 1. Usamos EXACTAMENTE la URL que inspeccionaste
+    const targetUrl = 'https://www.espn.com.gt/'; 
     
     const response = await fetch(targetUrl, {
       headers: { 
@@ -25,18 +24,17 @@ export default async function handler(req: any, res: any) {
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // 2. Extraemos los nombres con la clase que encontraste
+    // 2. Extraemos los datos
     const teamHome = $('.short-name').eq(0).text().trim();
     const teamAway = $('.short-name').eq(1).text().trim();
     
     if (!teamHome) {
       return res.status(200).json({ 
         success: true, 
-        message: 'No hay partidos en vivo con ese formato en este momento.' 
+        message: '¡El CÓDIGO NUEVO funciona! Pero no hay partidos en la página principal ahora.' 
       });
     }
 
-    // 3. Extraemos goles y tiempo
     const scoreHomeText = $('.score').eq(0).text().trim() || '0';
     const scoreAwayText = $('.score').eq(1).text().trim() || '0';
     const scoreHome = parseInt(scoreHomeText) || 0;
@@ -45,7 +43,7 @@ export default async function handler(req: any, res: any) {
     const matchMinuteRaw = $('.game-time').first().text();
     const matchMinute = matchMinuteRaw.replace(/\s+/g, '') || 'LIVE';
 
-    // 4. Guardamos la información real en Supabase
+    // 3. Guardamos en Supabase
     const { error } = await supabase
       .from('live_scores')
       .upsert({
@@ -62,7 +60,7 @@ export default async function handler(req: any, res: any) {
 
     return res.status(200).json({ 
       success: true, 
-      message: '¡Marcador real extraído y guardado!',
+      message: '¡ÉXITO! Marcador real de ESPN.com.gt extraído.',
       data: { teamHome, teamAway, scoreHome, scoreAway, matchMinute }
     });
 
