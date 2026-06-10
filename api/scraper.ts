@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     // 1. Visitamos la versión de Guatemala de ESPN para los resultados
-    const targetUrl = 'https://www.espn.com.gt/futbol/resultados'; 
+    const targetUrl = 'https://www.espn.com.gt/futbol/partido/_/juegoId/401867950/islandia-argentina'; 
     
     const response = await fetch(targetUrl, {
       headers: { 
