@@ -1,9 +1,8 @@
-import * as cheerio from 'cheerio';
 import { createClient } from '@supabase/supabase-js';
 
 // Conexión a tu base de datos
 const supabaseUrl = 'https://slwnehwhzfywmhldgzgb.supabase.co';
-const supabaseKey = 'TU_ANON_KEY_AQUI'; // ¡Recuerda poner tu llave real aquí!
+const supabaseKey = 'sb_publishable_x_KqYiZhTtaRoJIUlu8CMg_aJK4UNWb'; // ¡Pon tu llave real aquí!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
@@ -13,10 +12,9 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    // --- DATOS FORZADOS DE PRUEBA ---
-    // Si esto funciona, sabremos que el robot tiene control total de la base de datos
-    const teamHome = "Argentina (Robot)";
-    const teamAway = "Islandia (Robot)";
+    // --- DATOS FORZADOS DE PRUEBA PARA VERCEL ---
+    const teamHome = "Argentina (Vercel)";
+    const teamAway = "Islandia (Vercel)";
     const scoreHome = 5; 
     const scoreAway = 0;
     const matchMinute = "85'";
@@ -25,7 +23,7 @@ export default async function handler(req: any, res: any) {
     const { error } = await supabase
       .from('live_scores')
       .upsert({
-        id: 1, // Usamos el ID 1 para sobreescribir el partido de México
+        id: 1, 
         team_home: teamHome,
         team_away: teamAway,
         score_home: scoreHome,
@@ -36,17 +34,10 @@ export default async function handler(req: any, res: any) {
 
     if (error) throw error;
 
-    // Respuesta de éxito que verás en tu navegador
     return res.status(200).json({ 
       success: true, 
-      message: '¡Prueba exitosa! El robot inyectó los datos falsos en Supabase.',
-      data: { 
-        teamHome, 
-        teamAway, 
-        scoreHome, 
-        scoreAway, 
-        matchMinute 
-      }
+      message: '¡Vercel ejecutó el Robot correctamente!',
+      data: { teamHome, teamAway, scoreHome, scoreAway, matchMinute }
     });
 
   } catch (error: any) {
