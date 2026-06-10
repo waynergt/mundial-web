@@ -1,25 +1,51 @@
+// @ts-nocheck
+import * as cheerio from 'cheerio';
 import { createClient } from '@supabase/supabase-js';
 
 // Conexión a tu base de datos
 const supabaseUrl = 'https://slwnehwhzfywmhldgzgb.supabase.co';
-const supabaseKey = 'sb_publishable_x_KqYiZhTtaRoJIUlu8CMg_aJK4UNWb'; // ¡Pon tu llave real aquí!
+const supabaseKey = 'TU_ANON_KEY_AQUI'; // ¡Recuerda poner tu llave real!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
-  // Seguridad: solo permitimos peticiones GET
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Método no permitido' });
   }
 
   try {
-    // --- DATOS FORZADOS DE PRUEBA PARA VERCEL ---
-    const teamHome = "Argentina (Vercel)";
-    const teamAway = "Islandia (Vercel)";
-    const scoreHome = 5; 
-    const scoreAway = 0;
-    const matchMinute = "85'";
+    // 1. Visitamos la versión de Guatemala de ESPN para los resultados
+    const targetUrl = 'https://www.espn.com.gt/futbol/resultados'; 
+    
+    const response = await fetch(targetUrl, {
+      headers: { 
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36' 
+      }
+    });
+    
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
-    // ¡Guardamos en tu base de datos!
+    // 2. Extraemos los nombres con la clase que encontraste
+    const teamHome = $('.short-name').eq(0).text().trim();
+    const teamAway = $('.short-name').eq(1).text().trim();
+    
+    if (!teamHome) {
+      return res.status(200).json({ 
+        success: true, 
+        message: 'No hay partidos en vivo con ese formato en este momento.' 
+      });
+    }
+
+    // 3. Extraemos goles y tiempo
+    const scoreHomeText = $('.score').eq(0).text().trim() || '0';
+    const scoreAwayText = $('.score').eq(1).text().trim() || '0';
+    const scoreHome = parseInt(scoreHomeText) || 0;
+    const scoreAway = parseInt(scoreAwayText) || 0;
+    
+    const matchMinuteRaw = $('.game-time').first().text();
+    const matchMinute = matchMinuteRaw.replace(/\s+/g, '') || 'LIVE';
+
+    // 4. Guardamos la información real en Supabase
     const { error } = await supabase
       .from('live_scores')
       .upsert({
@@ -36,7 +62,7 @@ export default async function handler(req: any, res: any) {
 
     return res.status(200).json({ 
       success: true, 
-      message: '¡Vercel ejecutó el Robot correctamente!',
+      message: '¡Marcador real extraído y guardado!',
       data: { teamHome, teamAway, scoreHome, scoreAway, matchMinute }
     });
 
