@@ -35,7 +35,7 @@ export default function App() {
               <div className="text-4xl mb-4">⚙️</div>
               <h2 className="text-xl font-bold text-white mb-2">En Mantenimiento</h2>
               <p className="text-zinc-400 text-sm max-w-[250px]">
-                Estamos optimizando nuestros motores de datos para traerte los marcadores en tiempo real. ¡Vuelve pronto!
+                Estamos optimizando nuestros motores de datos para traerte los marcadores en tiempo real. ¡MUY PRONTO!
               </p>
             </div>
           </div>
