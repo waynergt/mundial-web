@@ -28,14 +28,14 @@ export default function App() {
         {/* --- PESTAÑA INICIO --- */}
         {activeTab === 'home' && <Home />}
         
-        {/* --- PESTAÑA EN VIVO (EN MANTENIMIENTO) --- */}
+        {/* --- PESTAÑA EN VIVO (MANTENIMIENTO) --- */}
         {activeTab === 'live' && (
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6 animate-fade-in">
             <div className="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800 shadow-2xl">
               <div className="text-4xl mb-4">⚙️</div>
               <h2 className="text-xl font-bold text-white mb-2">En Mantenimiento</h2>
               <p className="text-zinc-400 text-sm max-w-[250px]">
-                Estamos optimizando nuestros motores de datos para traerte los marcadores en tiempo real. ¡MUY PRONTO!
+                Estamos optimizando nuestros motores de datos para traerte los marcadores en tiempo real. ¡Vuelve pronto!
               </p>
             </div>
           </div>
