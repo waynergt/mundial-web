@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Conexión a tu base de datos
 const supabaseUrl = 'https://slwnehwhzfywmhldgzgb.supabase.co';
-const supabaseKey = 'TU_ANON_KEY_AQUI'; // ¡Recuerda poner tu llave real!
+const supabaseKey = 'sb_publishable_x_KqYiZhTtaRoJIUlu8CMg_aJK4UNWb'; // ¡Recuerda poner tu llave real!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
