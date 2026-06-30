@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Home } from './components/Home';
 import { LiveTab } from './components/Live/LiveTab';
+import { BracketTab } from './components/Live/BracketTab'; // IMPORTACIÓN NUEVA
 import { NewsCard } from './components/News/NewsCard';
 import { Navigation } from './components/Shared/Navigation';
 import { AdminPanel } from './components/Admin/AdminPanel';
@@ -57,6 +58,11 @@ export default function App() {
           <LiveTab matches={matches} standings={standings} />
         )}
 
+        {/* NUEVA PESTAÑA DE LLAVES (BRACKET) */}
+        {activeTab === 'bracket' && (
+          <BracketTab matches={matches} />
+        )}
+
         {activeTab === 'news' && (
           <div className="space-y-4 animate-fade-in">
             {news.map(n => <NewsCard key={n.id} news={n} />)}
@@ -106,7 +112,7 @@ export default function App() {
               }}
               className="text-[9px] bg-zinc-900 border border-zinc-800 px-2 py-1 rounded-md text-zinc-500 font-mono cursor-pointer hover:text-zinc-300 transition-colors select-none"
             >
-              v1.6.3
+              v1.7.0
             </span>
           </div>
         </footer>
